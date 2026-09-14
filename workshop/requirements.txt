@@ -1,0 +1,13 @@
+# Pakiety uczestnika i prowadzącego (Serverless, environment 4+).
+# Instalacja w notebooku: %pip install --quiet -r ../requirements.txt
+mlflow[databricks]>=3.10.1
+databricks-sdk  # wersję wyznacza unitycatalog-ai[databricks] (<=0.94)
+databricks-ai-search>=0.78
+databricks-langchain>=0.20
+databricks-mcp>=0.9
+unitycatalog-ai[databricks]>=0.4
+langchain>=1.0
+langchain-classic>=1.0
+langgraph>=1.2
+langchain-text-splitters>=1.1
+openai>=1.0

@@ -1,0 +1,6 @@
+# Dodatkowe pakiety prowadzącego do scripts/prepare_data_premium.ipynb (generator PDF z WS3).
+-r requirements.txt
+fpdf2>=2.8
+matplotlib>=3.8
+pandas>=2.0
+pyarrow>=15
