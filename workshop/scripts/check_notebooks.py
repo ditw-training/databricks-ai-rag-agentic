@@ -105,6 +105,8 @@ def check_parity(demo: Path, lab: Path) -> list[str]:
 
 def main() -> int:
     findings: list[str] = []
+    if not any((WORKSHOP / "demo").glob("*.ipynb")):
+        findings.append("workshop/demo: no canonical notebooks — nothing to lint")
     for directory in NOTEBOOK_DIRS:
         for path in sorted(directory.glob("*.ipynb")):
             findings += check_notebook(path, require_markers=directory.name in ("demo", "labs", "00_setup", "scripts"))

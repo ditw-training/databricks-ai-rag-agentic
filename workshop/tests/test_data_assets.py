@@ -21,8 +21,9 @@ MAX_TOTAL_BYTES = 20 * 1024 * 1024
 
 
 def _needs(path: Path):
-    if not path.exists():
-        pytest.skip(f"{path.relative_to(ROOT)} not prepared yet — run workshop/scripts/prepare_data_premium.ipynb and build_manifest.py")
+    ready = any(not p.name.startswith(".") for p in path.iterdir()) if path.is_dir() else path.exists()
+    if not ready:
+        pytest.skip(f"{path.relative_to(ROOT)} not prepared yet — run workshop/scripts/prepare_data_premium.ipynb")
 
 
 def test_manifest_matches_files():

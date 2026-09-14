@@ -1,6 +1,6 @@
 """Derive participant lab notebooks (``workshop/labs``) from canonical demo notebooks (``workshop/demo``).
 
-Rules (see AGENTS.md):
+Rules:
 - ``demo/`` is canonical; never edit ``labs/`` by hand.
 - a code cell tagged ``solution`` is replaced by its ``metadata.exercise_source`` (tag becomes ``exercise``);
 - a cell tagged ``trainer_only`` is replaced by a markdown note built from ``metadata.trainer_note``;
@@ -18,6 +18,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DEMO_DIR = ROOT / "workshop" / "demo"
 LABS_DIR = ROOT / "workshop" / "labs"
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from check_notebooks import marker_of  # noqa: E402
 
 TRAINER_PREFIX = "> **Demo prowadzącego (Premium).** "
 
@@ -55,13 +58,8 @@ def derive_lab(notebook: dict) -> dict:
         tags = list(metadata.get("tags", []))
         if "trainer_only" in tags:
             note = _as_text(metadata.pop("trainer_note")).strip()
-            marker = ""
-            first_line = _as_text(cell.get("source", "")).splitlines()[:1]
-            if first_line and "source:" in first_line[0]:
-                marker = first_line[0].replace("%sql", "").replace("--", "<!--").replace("#", "<!--").strip()
-                if marker.startswith("<!--") and not marker.endswith("-->"):
-                    marker += " -->"
-                marker += "\n"
+            origin = marker_of(cell)
+            marker = f"<!-- source: {origin} -->\n" if origin else ""
             cell["cell_type"] = "markdown"
             cell["source"] = f"{marker}{TRAINER_PREFIX}{note}\n"
             cell.pop("outputs", None)
