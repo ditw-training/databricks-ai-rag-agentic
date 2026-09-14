@@ -1,0 +1,12 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.ipynb_checkpoints/
+.claude/
+
+# Local git history of the Mariusz archive (use: git --git-dir=Warsztaty_Mariusz/.git_mariusz log)
+Warsztaty_Mariusz/.git_mariusz/
+# Generated dependency trees inside archives are not published
+Warsztaty_Krzysztof/rag_agent/node_modules/

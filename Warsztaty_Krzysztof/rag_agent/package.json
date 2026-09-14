@@ -1,0 +1,13 @@
+{
+  "name": "databricks-document-parsing-course-assets",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate:robotics": "node scripts/generate_robotics_pdfs.mjs",
+    "validate:robotics": "node scripts/validate_robotics_assets.mjs"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "pdfkit": "^0.17.2"
+  }
+}
