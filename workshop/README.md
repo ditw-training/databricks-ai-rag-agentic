@@ -4,6 +4,8 @@ Budujesz asystenta AI dla fikcyjnej firmy **TechRetail Corp**: od rozmowy z mode
 
 Prowadzą **Krzysztof i Mariusz**.
 
+> **Pierwszy raz tutaj?** Zacznij od [przewodnika uczestnika z osią czasu](docs/przewodnik_uczestnika.md): co przygotować przed warsztatem, co robisz w każdym module i co masz na koniec.
+
 ## Prework (15 min, przed warsztatem)
 
 1. **Konto Databricks Free Edition:** zarejestruj się na stronie Databricks Free Edition. Wystarczy konto Google, Microsoft albo e-mail.

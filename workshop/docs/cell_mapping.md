@@ -128,7 +128,7 @@ Indeksy `WSx[i]` są 0-based (jak w pliku .ipynb); prezentacja i Przewodnik Mari
 | 12 | `m3-chunking-lab` | markdown |  | `WS3[13] + slide 37` | adapted |
 | 13 | `m3-chunking` | code | from langchain_text_splitters import RecursiveCharacterTextSplitter | `WS3[16]` | adapted / lab |
 | 14 | `m3-embedding-intro` | markdown | 3. Embedding: tekst zamieniony na 1024 liczby | `WS3[17] + slide 36` | adapted / optional |
-| 15 | `m3-embedding` | code | from databricks.sdk import WorkspaceClient | `WS3[18]` | adapted / lab / optional |
+| 15 | `m3-embedding` | code | import time | `WS3[18]` | adapted / lab / optional |
 | 16 | `m3-search-intro` | markdown | 4. Indeks AI Search (dawniej Vector Search) | `WS3[8] + slide 39` | adapted |
 | 17 | `m3-search-index` | code | from databricks.ai_search.client import AISearchClient | `WS3[19]` | adapted |
 | 18 | `m3-retrievers` | code | import re | `WS3[20] + WS3[18]` | adapted |
@@ -144,7 +144,7 @@ Indeksy `WSx[i]` są 0-based (jak w pliku .ipynb); prezentacja i Przewodnik Mari
 | 28 | `m3-ka` | markdown | Demo prowadzącego: Knowledge Assistant (Agent Bricks) | `WS3[29] + K:Warsztaty_Krzysztof/rag_agent/notebooks/05_building_assistant.py` | adapted / trainer_only |
 | 29 | `m3-ka-query` | code | KA_ENDPOINT = ""  # nazwa endpointu z karty Knowledge Assistant, np. k | `WS3[33]` | adapted / trainer_only |
 | 30 | `m3-levels` | markdown | Poziomy 2 i 3: kiedy skończysz ścieżkę | `new + K:Warsztaty_Krzysztof/rag_agent/notebooks/03_vector_search.py` | adapted |
-| 31 | `m3-bonus-bakehouse` | code | reviews = (spark.table("samples.bakehouse.media_customer_reviews") | `new + WS3[18] + WS3[20]` | adapted / lab / poziom 2 |
+| 31 | `m3-bonus-bakehouse` | code | import time | `new + WS3[18] + WS3[20]` | adapted / lab / poziom 2 |
 | 32 | `m3-card` | markdown | Karta wzorca: dokumenty jako narzędzie | `new + slide 38 + K:Warsztaty_Krzysztof/rag_agent/notebooks/02_chunking.py` | adapted |
 | 33 | `m3-summary` | markdown | Podsumowanie | `new + WS3[39]` | adapted |
 
@@ -191,7 +191,7 @@ Indeksy `WSx[i]` są 0-based (jak w pliku .ipynb); prezentacja i Przewodnik Mari
 | 6 | `m5-context` | code | import json | `new + WS4[3] + WS4[4]` | adapted |
 | 7 | `m5-tracing-intro` | markdown | 1. Tracing przed agentem | `WS4[14] + slide 54` | adapted |
 | 8 | `m5-tracing` | code | experiment = mlflow.set_experiment(f"/Users/{USERNAME}/{EXPERIMENT_NAM | `WS4[14]` | adapted |
-| 9 | `m5-retrieve-local` | code | from databricks.sdk import WorkspaceClient | `WS3[18] + new` | adapted |
+| 9 | `m5-retrieve-local` | code | import time | `WS3[18] + new` | adapted |
 | 10 | `m5-agent-intro` | markdown | 2. Agent z czterema narzędziami | `WS4[12] + slide 52` | adapted |
 | 11 | `m5-build-agent` | code | from databricks_langchain import ChatDatabricks, UCFunctionToolkit, Ve | `WS4[12]` | adapted / lab |
 | 12 | `m5-routes-intro` | markdown | 3. Macierz tras: sześć pytań, sześć oczekiwanych tras | `slide 52 + slide 53 + WS4[13]` | adapted |
@@ -244,7 +244,7 @@ Indeksy `WSx[i]` są 0-based (jak w pliku .ipynb); prezentacja i Przewodnik Mari
 | 4 | `m6-config` | code | CATALOG = "workspace" | `new + WS4[3] + WS2[6]` | adapted |
 | 5 | `m6-context` | code | import asyncio | `new + WS4[18]` | adapted |
 | 6 | `m6-mcp-intro` | markdown | 1. MCP na Databricks: agent jako klient, narzędzia jako serwery | `slide 58 + slide 59 + WS4[17]` | adapted |
-| 7 | `m6-mcp-client` | code | from databricks_mcp import DatabricksMCPClient | `new + WS4[18]` | adapted / lab |
+| 7 | `m6-mcp-client` | code | import nest_asyncio | `new + WS4[18]` | adapted / lab |
 | 8 | `m6-agent-intro` | markdown | 2. Demo: agent z narzędziami z trzech serwerów MCP | `WS4[17] + slide 60` | adapted |
 | 9 | `m6-mcp-agent` | code | from databricks_langchain import ChatDatabricks, DatabricksMCPServer,  | `WS4[19]` | adapted |
 | 10 | `m6-risks` | markdown | 3. Ryzyka agentów: czym różnią się od ryzyk czatu | `slide 61 + slide 62 + slide 63 + WS2[10] + WS2[13]` | adapted |
