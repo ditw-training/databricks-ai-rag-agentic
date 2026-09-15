@@ -1,0 +1,18 @@
+# cp terraform.tfvars.example terraform.tfvars   (terraform.tfvars jest w .gitignore)
+
+# az account show --subscription "Microsoft MCT" --query id -o tsv
+subscription_id = "00000000-0000-0000-0000-000000000000"
+
+location = "northeurope" # albo "germanywestcentral"
+prefix   = "sqldayai"
+
+# Współprowadzący: admin workspace + ALL PRIVILEGES na katalogu warsztatu
+trainer_emails = [
+  # "krzysztof@example.com",
+  # "mariusz@example.com",
+]
+
+budget_amount = 50
+budget_emails = [
+  # "krzysztof@example.com",
+]

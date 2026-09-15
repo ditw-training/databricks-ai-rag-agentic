@@ -10,3 +10,13 @@ __pycache__/
 Warsztaty_Mariusz/.git_mariusz/
 # Generated dependency trees inside archives are not published
 Warsztaty_Krzysztof/rag_agent/node_modules/
+
+# Terraform (infra/): local state, plans and variables with subscription ids
+.terraform/
+*.tfstate
+*.tfstate.*
+tfplan
+*.tfvars
+!*.tfvars.example
+crash.log
+infra/**/apply.log
