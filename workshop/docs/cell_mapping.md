@@ -128,7 +128,7 @@ Indeksy `WSx[i]` są 0-based (jak w pliku .ipynb); prezentacja i Przewodnik Mari
 | 12 | `m3-chunking-lab` | markdown |  | `WS3[13] + slide 37` | adapted |
 | 13 | `m3-chunking` | code | from langchain_text_splitters import RecursiveCharacterTextSplitter | `WS3[16]` | adapted / lab |
 | 14 | `m3-embedding-intro` | markdown | 3. Embedding: tekst zamieniony na 1024 liczby | `WS3[17] + slide 36` | adapted / optional |
-| 15 | `m3-embedding` | code | import mlflow.deployments | `WS3[18]` | adapted / lab / optional |
+| 15 | `m3-embedding` | code | from databricks.sdk import WorkspaceClient | `WS3[18]` | adapted / lab / optional |
 | 16 | `m3-search-intro` | markdown | 4. Indeks AI Search (dawniej Vector Search) | `WS3[8] + slide 39` | adapted |
 | 17 | `m3-search-index` | code | from databricks.ai_search.client import AISearchClient | `WS3[19]` | adapted |
 | 18 | `m3-retrievers` | code | import re | `WS3[20] + WS3[18]` | adapted |
@@ -191,7 +191,7 @@ Indeksy `WSx[i]` są 0-based (jak w pliku .ipynb); prezentacja i Przewodnik Mari
 | 6 | `m5-context` | code | import json | `new + WS4[3] + WS4[4]` | adapted |
 | 7 | `m5-tracing-intro` | markdown | 1. Tracing przed agentem | `WS4[14] + slide 54` | adapted |
 | 8 | `m5-tracing` | code | experiment = mlflow.set_experiment(f"/Users/{USERNAME}/{EXPERIMENT_NAM | `WS4[14]` | adapted |
-| 9 | `m5-retrieve-local` | code | import mlflow.deployments | `WS3[18] + new` | adapted |
+| 9 | `m5-retrieve-local` | code | from databricks.sdk import WorkspaceClient | `WS3[18] + new` | adapted |
 | 10 | `m5-agent-intro` | markdown | 2. Agent z czterema narzędziami | `WS4[12] + slide 52` | adapted |
 | 11 | `m5-build-agent` | code | from databricks_langchain import ChatDatabricks, UCFunctionToolkit, Ve | `WS4[12]` | adapted / lab |
 | 12 | `m5-routes-intro` | markdown | 3. Macierz tras: sześć pytań, sześć oczekiwanych tras | `slide 52 + slide 53 + WS4[13]` | adapted |

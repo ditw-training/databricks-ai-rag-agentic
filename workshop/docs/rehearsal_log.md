@@ -6,7 +6,11 @@ Każde uruchomienie w chmurze dopisuj na górze tabeli. Wszystko, co notebooki z
 
 | Data | Workspace | Notebook | Wynik | Czas | Uwagi |
 |---|---|---|---|---|---|
-| | | | | | |
+| 2026-09-15 | trial Premium `infra/azure_trial` (northeurope) | `scripts/prepare_data_premium` (job, serverless env 5) | ✅ | 5,5 min | przebieg 4; eksport 16 plików, 1,7 MB; embeddingi 15 s |
+| 2026-09-15 | jw. | jw. (poprawka `attrs`) | ❌ | 17 min | `REQUEST_LIMIT_EXCEEDED` na `databricks-gte-large-en`; `mlflow.deployments` ponawiał po cichu do timeoutu SDK |
+| 2026-09-15 | jw. | jw. (env 5 wymuszony w jobie) | ❌ | 2 min | `PlanMetrics is not JSON serializable` przy `to_parquet` po `toPandas()` |
+| 2026-09-15 | jw. | jw. (import `.ipynb` bez metadanych) | ❌ | 4 min | środowisko serverless 1 (Python 3.10); ten sam błąd `PlanMetrics` |
+| 2026-09-15 | jw. | `infra/azure_trial/smoke_test.py` | ✅ 12/12 | — | modele, tabela na ADLS, `samples.bakehouse`, `ai_query`, AI Search API, Apps API, MCP |
 
 ## Potwierdzone
 
@@ -23,6 +27,17 @@ Każde uruchomienie w chmurze dopisuj na górze tabeli. Wszystko, co notebooki z
 | 2026-09-14 | `unitycatalog-ai` przy docstringu bez `Args:` tylko ostrzega (nie przerywa rejestracji) | `parse_docstring` lokalnie |
 | 2026-09-14 | Smoke testy lokalne z atrapą modelu i funkcji: M3 (chunking, `retrieve_local`, RAG z cytatami, tryby wyszukiwania, łańcuch LangChain z trace'em), M5 (`build_agent`, `AgentExecutor.intermediate_steps`, macierz tras, naprawa, `ResponsesAgent` z historią, porównanie z M1), M6 (`create_agent` z asynchronicznymi narzędziami MCP) | skrypty w scratchpadzie sesji; `SMOKE OK` |
 | 2026-09-14 | Kod pliku agenta *models from code* (M5, komórka prowadzącego) parsuje się; `mlflow.models.ModelConfig` istnieje w MLflow 3.16 | `ast.parse` |
+
+| 2026-09-15 | Workspace trial: Llama 3.3 70B i gte-large-en `READY`, `ai_query`, `samples.bakehouse` (3333 transakcje), zarządzany serwer MCP `system/ai` (4 narzędzia), API AI Search i Apps | `smoke_test.py` |
+| 2026-09-15 | Katalog Marketplace `databricks_simulated_retail_customer_data.v01` (`customers`, `sales`, `sales_orders`); licencja CC BY 4.0 + Marketplace Consumer Terms | API `consumer-listings get`, instalacja w UI |
+| 2026-09-15 | Walidacja po pseudonimizacji: 11/11 PASS (28 813, segmenty, NY 3 417, 26 862 bez zamówień, VIP 1038,72) | job `prepare_data_premium` |
+| 2026-09-15 | Font DejaVu pobiera się z GitHuba na serverless; 10 PDF = 0,5 MB; `ai_parse_document` 2.0 z obrazami ~2 min; 57 chunków (plan 50–80) | job |
+| 2026-09-15 | `databricks fs cp -r dbfs:/Volumes/...` kopiuje eksport; `test_data_assets.py` przechodzi | lokalnie |
+| 2026-09-15 | **`.ipynb` zaimportowany bez `environmentMetadata` działa na serverless env 1 (Python 3.10).** Metadane `{"environment_version": "5"}` są honorowane przy imporcie i w jobie (Python 3.12.3); wszystkie notebooki mają je teraz w repo | job próbny `envprobe` |
+| 2026-09-15 | **Spark Connect wkłada `PlanMetrics` do `DataFrame.attrs` po `toPandas()`**, a `to_parquet` zapisuje `attrs` jako JSON i pada. Poprawka: `.attrs.clear()`; test pilnuje każdej komórki `toPandas` → `to_parquet` | job |
+| 2026-09-15 | **Świeży workspace trial dostał `REQUEST_LIMIT_EXCEEDED` na `databricks-gte-large-en`** przy 3 paczkach po 20 tekstów; kilkanaście minut później te same wywołania przeszły od razu. `mlflow.deployments` (SDK) ponawia 429 po cichu aż do swojego timeoutu. M3, M5 i `prepare_data_premium` używają teraz `get_open_ai_client().with_options(max_retries=4, timeout=30)` (M5, M3) albo jawnego backoffu z komunikatem (prepare); lint zabrania `mlflow.deployments` | job + wywołanie na żywo 0,8 s |
+| 2026-09-15 | Katalog utworzony przez API (Terraform) **nie ma schematu `default`**; Terraform zakłada go osobno | `smoke_test.py` |
+| 2026-09-15 | Instalacja listingu Marketplace przez API wymaga `accepted_consumer_terms.version`, której dokumentacja nie podaje; akceptacja w UI | `consumer-installations create` → „Consumer Terms Missing” |
 
 ## Potwierdzone przez Krzysztofa na Free Edition (22–28.07.2026)
 
@@ -56,12 +71,14 @@ Każde uruchomienie w chmurze dopisuj na górze tabeli. Wszystko, co notebooki z
 - [ ] Run-all `00_setup` ≤ 12 min.
 
 **`prepare_data_premium` (Premium)**
-- [ ] Nazwa katalogu Marketplace to `databricks_simulated_retail_customer_data.v01`; licencja pozwala na redystrybucję pochodnej.
-- [ ] Walidacja po pseudonimizacji przechodzi (28 813 wierszy, segmenty, NY 3 417, 26 862 bez zamówień, VIP 1038,72).
-- [ ] Generator PDF pobiera font DejaVu (dostęp do GitHub z Serverless); 10 PDF razem < 5 MB.
-- [ ] `ai_parse_document` w wersji 2.0 zwraca ten sam kształt JSON co w WS3; liczba chunków 50–80.
-- [ ] `w.genie.list_spaces()` / `start_conversation_and_wait` działają dla Genie Agents; klucze metryk `mlflow.genai.evaluate` mają postać `<scorer>/mean`.
-- [ ] `databricks fs cp -r dbfs:/Volumes/...` kopiuje eksport do repo; cały eksport < 20 MB.
+- [ ] Licencja: człowiek potwierdza Marketplace Consumer Terms (PDF) i zmienia status w `data/LICENSE_REVIEW.md` na ✅.
+- [ ] `w.genie.list_spaces()` / `start_conversation_and_wait` działają dla Genie Agents; klucze metryk `mlflow.genai.evaluate` mają postać `<scorer>/mean` (krok 8, po utworzeniu Genie Agenta w UI).
+
+**Z próby 2026-09-15 (nowe)**
+- [ ] Limit zapytań pay-per-token na Free przy 20 osobach: M3 (4 zdania) i M5 (macierz tras, 1 embedding na pytanie) z `max_retries=4` kończą się w rozsądnym czasie albo czytelnym `RateLimitError`.
+- [ ] `get_open_ai_client()` jest oznaczony jako przestarzały w nowszym `databricks-sdk` (zalecany `databricks_openai.DatabricksOpenAI`); w przypiętym środowisku (SDK 0.67) działa bez ostrzeżeń. Decyzja przed warsztatem: zostać czy przejść na `databricks-openai`.
+- [ ] M3: `gte-large-en` to model angielski; dla polskich zdań parafraza 0,611 vs zupa 0,574 (mały margines). Sprawdzić na 4 zdaniach z labu i ewentualnie dodać zdanie o tym na slajdzie.
+- [ ] Środowisko serverless 5 dostępne na Free Edition (metadane notebooków).
 
 **M1**
 - [ ] `w.serving_endpoints.get_open_ai_client()` na Free; `extra_body={"enable_safety_filter": True}` akceptowane albo czytelny błąd.
