@@ -113,6 +113,8 @@ Uczestnik jest **Senior Data Analyst w TechRetail Corp**, dystrybutorze elektron
 
 **Moment kluczowy:** Genie odpowiada „0 klientów w NY” i pokazuje `***MASKED***`. Jedna polityka działa w każdym interfejsie.
 
+**Drugi moment (sprawdzony na próbie 15.09.2026):** na „Ile mamy klientów VIP?” Genie odpowiada **9 494**, a oczekiwana wartość to **9 541**. Genie liczy `COUNT(DISTINCT customer_id)`, a w danych źródłowych 143 klientów występuje w dwóch wierszach (286 wierszy). Obie liczby są „poprawne” dla innej definicji klienta. Pokaż SQL wygenerowany przez Genie, zapytaj salę, która odpowiedź jest dobra, i dopisz definicję do instrukcji Genie Agenta (np. „liczba klientów = liczba wierszy tabeli”). To ten sam wniosek co w M5: jakość zależy od kontekstu, który dasz modelowi.
+
 **Plan B:** `is_account_group_member` z nieistniejącą grupą zwraca błąd zamiast `FALSE` → zastąp warunek stałą `FALSE` i powiedz wprost, że to symulacja. **Nikt nie wchodzi do M5 bez `m4-cleanup` ✅.**
 
 ---

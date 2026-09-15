@@ -91,6 +91,16 @@ def test_pandas_exports_clear_spark_connect_attrs():
                 assert text.count(".attrs.clear()") >= text.count("toPandas()"), f"{path.name}/{cell.get('id')}"
 
 
+def test_sync_mcp_calls_patch_the_event_loop_in_the_same_cell():
+    # Databricks runs each cell in its own event loop context; list_tools()/call_tool() use asyncio.run
+    # and fail without nest_asyncio.apply() in that cell (trial dry-run 2026-09-15, M6).
+    for path in sorted(list(DEMO.glob("*.ipynb")) + list(SETUP.glob("*.ipynb"))):
+        for cell in json.loads(path.read_text(encoding="utf-8"))["cells"]:
+            for text in ("".join(cell["source"]), "".join(cell.get("metadata", {}).get("exercise_source") or [])):
+                if ".list_tools()" in text:
+                    assert "nest_asyncio.apply()" in text, f"{path.name}/{cell.get('id')}"
+
+
 def test_schedule_document_sums_to_teaching_minutes():
     schedule = (WORKSHOP / "docs" / "schedule.md").read_text(encoding="utf-8")
     assert str(sum(SCHEDULE_MINUTES)) in schedule

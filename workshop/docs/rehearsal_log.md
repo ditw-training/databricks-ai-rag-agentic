@@ -6,6 +6,14 @@ Każde uruchomienie w chmurze dopisuj na górze tabeli. Wszystko, co notebooki z
 
 | Data | Workspace | Notebook | Wynik | Czas | Uwagi |
 |---|---|---|---|---|---|
+| 2026-09-15 | trial Premium | `demo/m3_rag_ai_search` (paczki po 8) | ✅ | ok. 3 min | cały moduł z bonusem Bakehouse; wcześniej 3× ❌ na bonusie (429 przy paczce 20 opinii) |
+| 2026-09-15 | trial Premium | `demo/m6_mcp_security_next_steps` (łatka pętli w komórce) | ✅ | 2,5 min | `call_tool(get_customer_profile, 173920)`; agent MCP z 3 serwerami (funkcje, AI Search, Genie) |
+| 2026-09-15 | trial Premium | `demo/m6_mcp_security_next_steps` | ⚠️ | 3 min | job zielony, ale komórka labu złapała `asyncio.run() cannot be called from a running event loop` i pokazała mylące „serwer MCP niedostępny” |
+| 2026-09-15 | trial Premium | `demo/m5b_transfer_capstone` (Bakehouse) | ✅ | 1,5 min | funkcja `capstone_franchise_sales`, narzędzie tekstowe na opiniach, trasy 2/3 (próg karty wyjściowej) |
+| 2026-09-15 | trial Premium | `demo/m5_end_to_end_agent` | ✅ | 5 min | trasy 5/6, bez PII 6/6; sędzia `retail_policy` 0,83, `no_pii_leak` 1,0; `retail_customer_agent` v1 → `@champion`, wczytany model odpowiada 1038.72 USD; App nie istnieje (krok UI) |
+| 2026-09-15 | trial Premium | `demo/m4_sql_genie_governance` | ✅ | 3 min | 4/4 wartości oczekiwane; row filter i maska nałożone i zdjęte (28 813, `tax_id` bez maski); Genie przez SDK: VIP **9 494** vs 9 541 |
+| 2026-09-15 | trial Premium | `demo/m1_agentic_ai_playground` | ✅ | 2,5 min | model bez narzędzi zmyśla procenty mimo promptu (materiał do porównania w M5); jailbreak „powieść” odrzucony z alternatywą |
+| 2026-09-15 | trial Premium | Genie Agent i Knowledge Assistant przez API | ✅ | — | Genie `Retail Customer Intelligence Assistant` (`databricks genie create-space`, `serialized_space` v2); KA `Retail Customer Knowledge Assistant` na Volume `retail_docs` (`databricks knowledge-assistants`), ACTIVE, endpoint `ka-b604f219-endpoint`, cytuje raporty |
 | 2026-09-15 | trial Premium | `00_setup/01_trainer_prepare_premium` (po poprawkach) | ✅ 10/14 | 2 min | brakuje tylko kroków UI i prowadzącego: Genie Agent, Knowledge Assistant, `@champion`, Databricks App |
 | 2026-09-15 | trial Premium | `pattern/p3_rag_robotics` (po poprawce) | ✅ | 2 min | parsowanie z cache, 30 fragmentów, indeks gotowy; `FULL_TEXT` pokazany jako „niedostępny” |
 | 2026-09-15 | trial Premium | `pattern/p3_rag_robotics` | ❌ | 25 min | indeks robotyki powstał; zapytanie `FULL_TEXT`: „Full Text is not yet enabled for this workspace” (podgląd) |
@@ -41,7 +49,7 @@ Każde uruchomienie w chmurze dopisuj na górze tabeli. Wszystko, co notebooki z
 | 2026-09-15 | `databricks fs cp -r dbfs:/Volumes/...` kopiuje eksport; `test_data_assets.py` przechodzi | lokalnie |
 | 2026-09-15 | **`.ipynb` zaimportowany bez `environmentMetadata` działa na serverless env 1 (Python 3.10).** Metadane `{"environment_version": "5"}` są honorowane przy imporcie i w jobie (Python 3.12.3); wszystkie notebooki mają je teraz w repo | job próbny `envprobe` |
 | 2026-09-15 | **Spark Connect wkłada `PlanMetrics` do `DataFrame.attrs` po `toPandas()`**, a `to_parquet` zapisuje `attrs` jako JSON i pada. Poprawka: `.attrs.clear()`; test pilnuje każdej komórki `toPandas` → `to_parquet` | job |
-| 2026-09-15 | **Świeży workspace trial dostał `REQUEST_LIMIT_EXCEEDED` na `databricks-gte-large-en`** przy 3 paczkach po 20 tekstów; kilkanaście minut później te same wywołania przeszły od razu. `mlflow.deployments` (SDK) ponawia 429 po cichu aż do swojego timeoutu. M3, M5 i `prepare_data_premium` używają teraz `get_open_ai_client().with_options(max_retries=4, timeout=30)` (M5, M3) albo jawnego backoffu z komunikatem (prepare); lint zabrania `mlflow.deployments` | job + wywołanie na żywo 0,8 s |
+| 2026-09-15 | **`REQUEST_LIMIT_EXCEEDED` na `databricks-gte-large-en` zależy od rozmiaru paczki, nie od tempa:** paczka 20 opinii Bakehouse (ok. 13 tys. znaków) dostaje 429 natychmiast i przy każdej próbie, paczki 1, 5 i 10 przechodzą w 0,5 s; komunikat mówi mylnie o „QPS rate limit”. Pierwsza porażka `prepare_data_premium` (paczki po 20) miała tę samą przyczynę; `prepare_data_premium` i bonus M3 używają paczek po 8. `mlflow.deployments` (SDK) ponawia 429 po cichu aż do swojego timeoutu. M3, M5 i `prepare_data_premium` używają teraz `get_open_ai_client().with_options(max_retries=4, timeout=30)` (M5, M3) albo jawnego backoffu z komunikatem (prepare); lint zabrania `mlflow.deployments` | job + wywołanie na żywo 0,8 s |
 | 2026-09-15 | Katalog utworzony przez API (Terraform) **nie ma schematu `default`**; Terraform zakłada go osobno | `smoke_test.py` |
 | 2026-09-15 | Instalacja listingu Marketplace przez API wymaga `accepted_consumer_terms.version`, której dokumentacja nie podaje; akceptacja w UI | `consumer-installations create` → „Consumer Terms Missing” |
 
@@ -51,6 +59,12 @@ Każde uruchomienie w chmurze dopisuj na górze tabeli. Wszystko, co notebooki z
 | 2026-09-15 | **AI Search `FULL_TEXT` na nowym workspace trial to podgląd wyłączony domyślnie** („Full Text is not yet enabled… previews”); ANN i HYBRID działają. M3 i `p3` pokazują tryb jako niedostępny zamiast przerywać | job `p3` |
 | 2026-09-15 | Indeks Delta Sync 57 wierszy: ok. 12 min od utworzenia do `ONLINE` na świeżym endpoincie; drugi indeks (robotyka, 30 wierszy) na tym samym endpoincie | joby `01_trainer`, `p3` |
 | 2026-09-15 | Pierwszy VIP według `customer_id` (4205) nie ma zamówień; „klient X” to teraz pierwszy VIP z zamówieniem, miastem i `tax_id` (173920) | job M2 |
+
+| 2026-09-15 | **Genie liczy klientów jako `COUNT(DISTINCT customer_id)`: 9 494 VIP zamiast 9 541**, bo w danych źródłowych 143 klientów ma po dwa wiersze (286). Dane zostają (liczby z decku), przewodnik prowadzącego ma z tego moment dydaktyczny w M4 | job M4 + parquet lokalnie |
+| 2026-09-15 | **`nest_asyncio.apply()` musi być w tej samej komórce co `list_tools()` / `call_tool()`**; łatka z wcześniejszej komórki nie działa. Test pilnuje każdej komórki z `list_tools()` | job M6 |
+| 2026-09-15 | Genie Agent i Knowledge Assistant da się założyć z CLI (`genie create-space` z `serialized_space` wersja 2; `knowledge-assistants create-knowledge-assistant` + `create-knowledge-source` typu `files`); KA z Volume jest ACTIVE po kilku minutach i cytuje PDF-y oraz obrazy stron | CLI 1.16.1 |
+| 2026-09-15 | `databricks serving-endpoints query` obcina odpowiedź agenta KA do pól `id/model/object`; pełna odpowiedź przez `databricks api post /serving-endpoints/<ka>/invocations` | CLI |
+| 2026-09-15 | Rejestracja agenta *models from code* w UC z aliasem `@champion` i wczytanie z UC działają na workspace z katalogiem na ADLS | job M5 |
 
 ## Potwierdzone przez Krzysztofa na Free Edition (22–28.07.2026)
 
