@@ -6,6 +6,7 @@ Każde uruchomienie w chmurze dopisuj na górze tabeli. Wszystko, co notebooki z
 
 | Data | Workspace | Notebook | Wynik | Czas | Uwagi |
 |---|---|---|---|---|---|
+| 2026-09-15 | trial Premium, **Git folder z GitHuba (`1221fde`)** | **regresja: 11 notebooków w jednym jobie** (`00_setup` → M1, M2, `p2` → M3, `p3` → M4 → M5, capstone → M6 → gotowość) | ✅ 11/11 | 18 min | 0 błędów w komórkach; setup 6/6; M4 4/4 (Genie 9 494); M5 trasy 5/6, PII 6/6, sędzia 1,0/1,0, `@champion` v2; capstone 2/3; M6 `call_tool` OK; gotowość **12/14** (brak App i `KA_ENDPOINT`); `smoke_test.py` 12/12 |
 | 2026-09-15 | trial Premium | `demo/m3_rag_ai_search` (paczki po 8) | ✅ | ok. 3 min | cały moduł z bonusem Bakehouse; wcześniej 3× ❌ na bonusie (429 przy paczce 20 opinii) |
 | 2026-09-15 | trial Premium | `demo/m6_mcp_security_next_steps` (łatka pętli w komórce) | ✅ | 2,5 min | `call_tool(get_customer_profile, 173920)`; agent MCP z 3 serwerami (funkcje, AI Search, Genie) |
 | 2026-09-15 | trial Premium | `demo/m6_mcp_security_next_steps` | ⚠️ | 3 min | job zielony, ale komórka labu złapała `asyncio.run() cannot be called from a running event loop` i pokazała mylące „serwer MCP niedostępny” |
@@ -65,6 +66,8 @@ Każde uruchomienie w chmurze dopisuj na górze tabeli. Wszystko, co notebooki z
 | 2026-09-15 | Genie Agent i Knowledge Assistant da się założyć z CLI (`genie create-space` z `serialized_space` wersja 2; `knowledge-assistants create-knowledge-assistant` + `create-knowledge-source` typu `files`); KA z Volume jest ACTIVE po kilku minutach i cytuje PDF-y oraz obrazy stron | CLI 1.16.1 |
 | 2026-09-15 | `databricks serving-endpoints query` obcina odpowiedź agenta KA do pól `id/model/object`; pełna odpowiedź przez `databricks api post /serving-endpoints/<ka>/invocations` | CLI |
 | 2026-09-15 | Rejestracja agenta *models from code* w UC z aliasem `@champion` i wczytanie z UC działają na workspace z katalogiem na ADLS | job M5 |
+
+| 2026-09-15 | Macierz tras M5 nie jest deterministyczna: ten sam agent bez zmian dał 5/6, a przy powtórce w komórce naprawy 4/6. Na warsztacie porównuj trasy, a nie jedną liczbę; w przewodniku: „agenta nie testuje się przez ==” | regresja |
 
 ## Potwierdzone przez Krzysztofa na Free Edition (22–28.07.2026)
 
