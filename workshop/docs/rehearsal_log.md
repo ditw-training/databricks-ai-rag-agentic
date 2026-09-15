@@ -6,6 +6,12 @@ Każde uruchomienie w chmurze dopisuj na górze tabeli. Wszystko, co notebooki z
 
 | Data | Workspace | Notebook | Wynik | Czas | Uwagi |
 |---|---|---|---|---|---|
+| 2026-09-15 | trial Premium | `00_setup/01_trainer_prepare_premium` (po poprawkach) | ✅ 10/14 | 2 min | brakuje tylko kroków UI i prowadzącego: Genie Agent, Knowledge Assistant, `@champion`, Databricks App |
+| 2026-09-15 | trial Premium | `pattern/p3_rag_robotics` (po poprawce) | ✅ | 2 min | parsowanie z cache, 30 fragmentów, indeks gotowy; `FULL_TEXT` pokazany jako „niedostępny” |
+| 2026-09-15 | trial Premium | `pattern/p3_rag_robotics` | ❌ | 25 min | indeks robotyki powstał; zapytanie `FULL_TEXT`: „Full Text is not yet enabled for this workspace” (podgląd) |
+| 2026-09-15 | trial Premium | `00_setup/01_trainer_prepare_premium` | ✅ 7/14 | 13 min | indeks `retail_rag_chunks_index` ok. 12 min do ONLINE; błędy w kodzie: `SHOW USER FUNCTIONS`, MCP `asyncio.run` |
+| 2026-09-15 | trial Premium | `demo/m2_tool_calling`, `pattern/p2_uc_functions_bakehouse` | ✅ ✅ | 2,5 / 2,5 min | model wybrał `get_revenue_summary(3, 'NY')`; funkcje Bakehouse zwracają podsumowania; klient X 4205 bez zamówień → zmiana reguły |
+| 2026-09-15 | trial Premium | `00_setup/00_setup` | ✅ 6/6 | 2,5 min | preflight: SQL 9 541 VIP, 57 chunków, Llama, tracing, endpoint AI Search ONLINE, Bakehouse 3 333 / 204 |
 | 2026-09-15 | trial Premium `infra/azure_trial` (northeurope) | `scripts/prepare_data_premium` (job, serverless env 5) | ✅ | 5,5 min | przebieg 4; eksport 16 plików, 1,7 MB; embeddingi 15 s |
 | 2026-09-15 | jw. | jw. (poprawka `attrs`) | ❌ | 17 min | `REQUEST_LIMIT_EXCEEDED` na `databricks-gte-large-en`; `mlflow.deployments` ponawiał po cichu do timeoutu SDK |
 | 2026-09-15 | jw. | jw. (env 5 wymuszony w jobie) | ❌ | 2 min | `PlanMetrics is not JSON serializable` przy `to_parquet` po `toPandas()` |
@@ -38,6 +44,13 @@ Każde uruchomienie w chmurze dopisuj na górze tabeli. Wszystko, co notebooki z
 | 2026-09-15 | **Świeży workspace trial dostał `REQUEST_LIMIT_EXCEEDED` na `databricks-gte-large-en`** przy 3 paczkach po 20 tekstów; kilkanaście minut później te same wywołania przeszły od razu. `mlflow.deployments` (SDK) ponawia 429 po cichu aż do swojego timeoutu. M3, M5 i `prepare_data_premium` używają teraz `get_open_ai_client().with_options(max_retries=4, timeout=30)` (M5, M3) albo jawnego backoffu z komunikatem (prepare); lint zabrania `mlflow.deployments` | job + wywołanie na żywo 0,8 s |
 | 2026-09-15 | Katalog utworzony przez API (Terraform) **nie ma schematu `default`**; Terraform zakłada go osobno | `smoke_test.py` |
 | 2026-09-15 | Instalacja listingu Marketplace przez API wymaga `accepted_consumer_terms.version`, której dokumentacja nie podaje; akceptacja w UI | `consumer-installations create` → „Consumer Terms Missing” |
+
+| 2026-09-15 | `00_setup` z plików workspace: `DATA_DIR = cwd.parent / "data"`, `pd.read_parquet` z workspace files, `shutil.copy` do Volume, `%pip -r ../requirements.txt` (ok. 50 s) | job `00_setup` |
+| 2026-09-15 | **`spark.sql("SHOW USER FUNCTIONS IN catalog.schema")` na serverless → `CROSS_CATALOG_SCHEMA_REFERENCE_NOT_SUPPORTED`.** M5 i sprawdzenie gotowości czytają `information_schema.routines`; lint zabrania wzorca | job `01_trainer` |
+| 2026-09-15 | **`DatabricksMCPClient.list_tools()` w notebooku wymaga `nest_asyncio.apply()`** (inaczej `asyncio.run() cannot be called from a running event loop`); z nim serwer funkcji zwraca 7 narzędzi | job `01_trainer` |
+| 2026-09-15 | **AI Search `FULL_TEXT` na nowym workspace trial to podgląd wyłączony domyślnie** („Full Text is not yet enabled… previews”); ANN i HYBRID działają. M3 i `p3` pokazują tryb jako niedostępny zamiast przerywać | job `p3` |
+| 2026-09-15 | Indeks Delta Sync 57 wierszy: ok. 12 min od utworzenia do `ONLINE` na świeżym endpoincie; drugi indeks (robotyka, 30 wierszy) na tym samym endpoincie | joby `01_trainer`, `p3` |
+| 2026-09-15 | Pierwszy VIP według `customer_id` (4205) nie ma zamówień; „klient X” to teraz pierwszy VIP z zamówieniem, miastem i `tax_id` (173920) | job M2 |
 
 ## Potwierdzone przez Krzysztofa na Free Edition (22–28.07.2026)
 
@@ -79,6 +92,7 @@ Każde uruchomienie w chmurze dopisuj na górze tabeli. Wszystko, co notebooki z
 - [ ] `get_open_ai_client()` jest oznaczony jako przestarzały w nowszym `databricks-sdk` (zalecany `databricks_openai.DatabricksOpenAI`); w przypiętym środowisku (SDK 0.67) działa bez ostrzeżeń. Decyzja przed warsztatem: zostać czy przejść na `databricks-openai`.
 - [ ] M3: `gte-large-en` to model angielski; dla polskich zdań parafraza 0,611 vs zupa 0,574 (mały margines). Sprawdzić na 4 zdaniach z labu i ewentualnie dodać zdanie o tym na slajdzie.
 - [ ] Środowisko serverless 5 dostępne na Free Edition (metadane notebooków).
+- [ ] `FULL_TEXT` na Free Edition (Krzysztof 07.2026: działał) i włączenie podglądu na workspace prowadzącego (Settings → Previews).
 
 **M1**
 - [ ] `w.serving_endpoints.get_open_ai_client()` na Free; `extra_body={"enable_safety_filter": True}` akceptowane albo czytelny błąd.

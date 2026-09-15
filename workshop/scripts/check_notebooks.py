@@ -33,6 +33,7 @@ FORBIDDEN = [
     (r"dbutils\.fs\.cp\(\s*['\"]file:", "not supported on Serverless"),
     (r"is_account_group_member\('users'\)", "no-op predicate (see Mariusz commit 659e70e)"),
     (r"\d+\s?(min\b|minut)|\*\*Czas:\*\*", "no minutes in notebooks: timing lives in docs/schedule.md"),
+    (r"spark\.sql\(f?[\"']SHOW USER FUNCTIONS IN", "CROSS_CATALOG_SCHEMA_REFERENCE_NOT_SUPPORTED on serverless; query information_schema.routines"),
     (r"mlflow\.deployments", "retries a 429 silently for 10 minutes; use get_open_ai_client().with_options(max_retries=..., timeout=...)"),
 ]
 MARKER_RE = re.compile(r"^(?:#|--|<!--)\s*source:\s*(.+?)\s*(?:-->)?$")
