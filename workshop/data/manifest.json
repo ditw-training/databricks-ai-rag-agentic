@@ -70,8 +70,8 @@
     },
     {
       "path": "evaluation/route_test_cases.json",
-      "bytes": 1545,
-      "sha256": "dfc37be935068032a1df419d39c1098a162a9f9ee76619d2ede2cf4b60d58652"
+      "bytes": 1553,
+      "sha256": "97136f4de8eca5370f29efe0c7a42f01b3408fa97b55c2689d43e1c657a680a2"
     },
     {
       "path": "tables/gold_customer_360.parquet",
