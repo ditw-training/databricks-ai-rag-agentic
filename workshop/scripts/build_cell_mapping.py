@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DEMO = ROOT / "workshop" / "demo"
 SETUP = ROOT / "workshop" / "00_setup"
+PATTERN = ROOT / "workshop" / "pattern"
 OUT = ROOT / "workshop" / "docs" / "cell_mapping.md"
 
 sys.path.insert(0, str(ROOT / "workshop" / "scripts"))
@@ -42,6 +43,8 @@ def status_of(cell: dict, source: str) -> str:
         parts.append("trainer_only")
     if "optional" in tags:
         parts.append("optional")
+    if "bonus" in tags:
+        parts.append("poziom 2")
     return " / ".join(parts)
 
 
@@ -54,10 +57,10 @@ def main() -> int:
         "",
     ]
     total = 0
-    for path in sorted(list(SETUP.glob("*.ipynb")) + list(DEMO.glob("*.ipynb"))):
+    for path in sorted(list(SETUP.glob("*.ipynb")) + list(DEMO.glob("*.ipynb")) + list(PATTERN.glob("*.ipynb"))):
         nb = json.loads(path.read_text(encoding="utf-8"))
         meta = nb["metadata"].get("workshop", {})
-        lines += [f"## `{path.relative_to(ROOT)}` — {meta.get('title', '')} ({meta.get('minutes', '?')} min)", "",
+        lines += [f"## `{path.relative_to(ROOT)}` — {meta.get('title', '')}", "",
                   "| # | cell id | typ | nagłówek / pierwsza linia | źródło | status |", "|---|---|---|---|---|---|"]
         for index, cell in enumerate(nb["cells"], 1):
             source = marker_of(cell) or "?"

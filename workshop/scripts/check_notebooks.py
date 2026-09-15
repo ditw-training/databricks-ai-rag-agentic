@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKSHOP = ROOT / "workshop"
-NOTEBOOK_DIRS = [WORKSHOP / "demo", WORKSHOP / "labs", WORKSHOP / "00_setup", WORKSHOP / "scripts"]
+NOTEBOOK_DIRS = [WORKSHOP / "demo", WORKSHOP / "labs", WORKSHOP / "00_setup", WORKSHOP / "scripts", WORKSHOP / "pattern"]
 
 FORBIDDEN = [
     (r"^# MAGIC", "Databricks .py source-format prefix inside an .ipynb"),
@@ -23,7 +23,8 @@ FORBIDDEN = [
     (r"#notebook-\d{6,}", "workspace-specific notebook link"),
     (r"databricks\.vector_search|VectorSearchClient|databricks-vectorsearch", "Vector Search SDK renamed to AI Search"),
     (r"w\.vector_search_(endpoints|indexes)", "legacy Vector Search SDK"),
-    (r"state_modifier\s*=", "LangGraph 1.x uses prompt="),
+    (r"state_modifier\s*=", "removed in LangGraph 1.x"),
+    (r"create_react_agent\(", "deprecated in LangGraph 1.x; use langchain.agents.create_agent(system_prompt=...)"),
     (r"system\.ai\.google_drive", "MCP demo uses managed UC-function servers"),
     (r"agents\.deploy\(", "Model Serving agent deployment is legacy"),
     (r"<YOUR_CATALOG>|<YOUR_SCHEMA>", "unresolved placeholder"),
@@ -31,6 +32,7 @@ FORBIDDEN = [
     (r"set_experiment\(\s*['\"]/Shared/", "experiments live under /Users/<user>/"),
     (r"dbutils\.fs\.cp\(\s*['\"]file:", "not supported on Serverless"),
     (r"is_account_group_member\('users'\)", "no-op predicate (see Mariusz commit 659e70e)"),
+    (r"\d+\s?(min\b|minut)|\*\*Czas:\*\*", "no minutes in notebooks: timing lives in docs/schedule.md"),
 ]
 MARKER_RE = re.compile(r"^(?:#|--|<!--)\s*source:\s*(.+?)\s*(?:-->)?$")
 
@@ -109,7 +111,7 @@ def main() -> int:
         findings.append("workshop/demo: no canonical notebooks — nothing to lint")
     for directory in NOTEBOOK_DIRS:
         for path in sorted(directory.glob("*.ipynb")):
-            findings += check_notebook(path, require_markers=directory.name in ("demo", "labs", "00_setup", "scripts"))
+            findings += check_notebook(path, require_markers=directory.name in ("demo", "labs", "00_setup", "scripts", "pattern"))
     for demo in sorted((WORKSHOP / "demo").glob("*.ipynb")):
         lab = WORKSHOP / "labs" / demo.name
         if not lab.exists():

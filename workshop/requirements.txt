@@ -11,3 +11,7 @@ langchain-classic>=1.0
 langgraph>=1.2
 langchain-text-splitters>=1.1
 openai>=1.0
+nest-asyncio>=1.6  # M6: agent MCP, gdy pętla zdarzeń notebooka już działa
+# mcp 2.x usunął mcp.shared.context.RequestContext, przez co `import databricks_langchain` kończy się ImportError
+# (langchain-mcp-adapters 0.3.1). Zdejmij ograniczenie, gdy adapter wyda wersję zgodną z mcp 2.
+mcp>=1.20,<2
