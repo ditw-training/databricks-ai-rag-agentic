@@ -72,6 +72,25 @@ def test_notebooks_have_no_timeboxes(path):
             assert not re.search(r"\d+\s?(min\b|minut)|\*\*Czas:\*\*", text), f"{path.name}/{cell.get('id')}: minutes in notebook"
 
 
+SERVERLESS_ENVIRONMENT_VERSION = "5"  # Python 3.12; an imported notebook without it falls back to version 1 (Python 3.10)
+
+
+@pytest.mark.parametrize("path", sorted(list(DEMO.glob("*.ipynb")) + list(LABS.glob("*.ipynb")) + list(SETUP.glob("*.ipynb")) + list(SCRIPTS.glob("*.ipynb")) + list(PATTERN.glob("*.ipynb"))), ids=lambda p: p.name)
+def test_notebooks_pin_serverless_environment(path):
+    meta = json.loads(path.read_text(encoding="utf-8"))["metadata"].get("application/vnd.databricks.v1+notebook", {})
+    assert meta.get("environmentMetadata", {}).get("environment_version") == SERVERLESS_ENVIRONMENT_VERSION
+
+
+def test_pandas_exports_clear_spark_connect_attrs():
+    # Spark Connect puts PlanMetrics into DataFrame.attrs; to_parquet then fails with
+    # "Object of type PlanMetrics is not JSON serializable" (trial dry-run 2026-09-15).
+    for path in sorted(list(DEMO.glob("*.ipynb")) + list(SETUP.glob("*.ipynb")) + list(SCRIPTS.glob("*.ipynb")) + list(PATTERN.glob("*.ipynb"))):
+        for cell in json.loads(path.read_text(encoding="utf-8"))["cells"]:
+            text = "".join(cell["source"])
+            if "to_parquet(" in text and "toPandas()" in text:
+                assert text.count(".attrs.clear()") >= text.count("toPandas()"), f"{path.name}/{cell.get('id')}"
+
+
 def test_schedule_document_sums_to_teaching_minutes():
     schedule = (WORKSHOP / "docs" / "schedule.md").read_text(encoding="utf-8")
     assert str(sum(SCHEDULE_MINUTES)) in schedule
