@@ -1,0 +1,35 @@
+# Bramka jakości agenta w CI. Uruchamia macierz tras z M5 przed wdrożeniem.
+name: agent-gate
+
+on:
+  pull_request:
+    paths: ["workshop/demo/m5_end_to_end_agent.ipynb", "workshop/data/evaluation/**"]
+  workflow_dispatch:
+
+jobs:
+  route-matrix:
+    runs-on: ubuntu-latest
+    env:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+      DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Walidacja bundle
+        working-directory: workshop/transfer/cicd
+        run: databricks bundle validate -t dev
+
+      # Ten krok jest sednem: nie sprawdzamy, czy kod się kompiluje,
+      # tylko czy AGENT nadal wybiera właściwe narzędzia.
+      - name: Macierz tras jako bramka
+        working-directory: workshop/transfer/cicd
+        run: databricks bundle run agent_gate -t dev
+
+      - name: Wdrożenie (tylko gdy bramka przeszła)
+        if: github.ref == 'refs/heads/main'
+        working-directory: workshop/transfer/cicd
+        run: databricks bundle deploy -t prod

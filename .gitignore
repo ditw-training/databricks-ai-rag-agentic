@@ -1,0 +1,14 @@
+# Materiały prowadzącego: nie trafiają do repozytorium uczestników
+documents/prowadzacy/
+documents/scripts/
+documents/brand/
+documents/screens/
+documents/filmy/
+workshop/tests/
+infra/
+
+# Robocze
+.venv/
+__pycache__/
+.DS_Store
+~$*

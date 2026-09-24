@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-09-15T11:30:58+00:00",
+  "generated_by": "workshop/scripts/prepare_data_premium.ipynb",
+  "source": "databricks_simulated_retail_customer_data.v01 (Databricks Marketplace), pseudonymised",
+  "files": [
+    {
+      "path": "checkpoints/retail_rag_chunk_embeddings.parquet",
+      "bytes": 164845,
+      "sha256": "c595c2fbdcd1d40dd34051ef8670376f3ffb2ff455d80a252bf7e169f000676e"
+    },
+    {
+      "path": "checkpoints/retail_rag_chunks.parquet",
+      "bytes": 24300,
+      "sha256": "aa772a618fc7301fd6b54c1b0b31ab85f4214262afea8489228040e6cd73ff86"
+    },
+    {
+      "path": "checkpoints/retail_rag_docs.parquet",
+      "bytes": 48318,
+      "sha256": "af0fd424f81eb0324efea43bbea4d9e2c252e14bb02486868fc57583769c9ce7"
+    },
+    {
+      "path": "documents/01_segmentacja_klientow.pdf",
+      "bytes": 58588,
+      "sha256": "a1ccc8cf6db0d0df9f864e6584ba31a80fc8d47cf383e00c899c276ecbabb49c"
+    },
+    {
+      "path": "documents/02_analiza_geograficzna.pdf",
+      "bytes": 59548,
+      "sha256": "a8940b9fc03a883708caedf59855362feff401a4edbd379d1ad9fae807d4415e"
+    },
+    {
+      "path": "documents/03_retencja_klientow.pdf",
+      "bytes": 55117,
+      "sha256": "577924b743b9f881352f29986ed801d6dd5804df3d3f9f69dc8be825d98eca34"
+    },
+    {
+      "path": "documents/04_wartosc_klientow.pdf",
+      "bytes": 55883,
+      "sha256": "07c46640ddeb593279e91712e0f6e5ff767356bd1a93affdfa96493d09601d40"
+    },
+    {
+      "path": "documents/05_profil_vip.pdf",
+      "bytes": 50089,
+      "sha256": "bc8680f52eb0cf3a524aea9ffeac609c64da134b20dd8f33b055d80b892920b1"
+    },
+    {
+      "path": "documents/06_czestotliwosc_zakupow.pdf",
+      "bytes": 52915,
+      "sha256": "f668d0224b5f2be989ad05cc4ecd2b354a73b17d6f13a1bfbe2249d1008fef35"
+    },
+    {
+      "path": "documents/07_ryzyko_churn.pdf",
+      "bytes": 57808,
+      "sha256": "9b2546d95a30b127ba0442704430acd8135b890362ef1e56b573851134b8d52e"
+    },
+    {
+      "path": "documents/08_wskazniki_promocyjne.pdf",
+      "bytes": 56834,
+      "sha256": "40601a64810841d9ba5f70cd8554678cd2434d4833163e1f7a3b6dddd7ceb98f"
+    },
+    {
+      "path": "documents/09_jakosc_danych.pdf",
+      "bytes": 53368,
+      "sha256": "9491881583b1cb77d4382ea9590c5ca042cad634dc9d62344720165ff7c85a14"
+    },
+    {
+      "path": "documents/10_przewodnik_rfm.pdf",
+      "bytes": 50273,
+      "sha256": "85d3106165caf7e8c56a4eb228e6f501bdddbcd3c6d7597d9518ee96adf44391"
+    },
+    {
+      "path": "evaluation/route_test_cases.json",
+      "bytes": 1553,
+      "sha256": "97136f4de8eca5370f29efe0c7a42f01b3408fa97b55c2689d43e1c657a680a2"
+    },
+    {
+      "path": "tables/gold_customer_360.parquet",
+      "bytes": 924942,
+      "sha256": "d1c7474eb7b211f5ae50a09577d448fb639686f9494c8c2ad283b735901fa952"
+    },
+    {
+      "path": "tables/gold_customer_360_sample.csv",
+      "bytes": 16564,
+      "sha256": "d131093bb0ec30848063a4f228e12e2dd862147fbc2e6cbfe24f76e63cd84f6b"
+    }
+  ]
+}

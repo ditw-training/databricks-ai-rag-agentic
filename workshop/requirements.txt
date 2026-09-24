@@ -1,0 +1,19 @@
+# Pakiety uczestnika i prowadzącego (Serverless, environment 4+).
+# Instalacja w notebooku: %pip install --quiet -r ../requirements.txt
+mlflow[databricks]>=3.10.1
+databricks-sdk  # wersję wyznacza unitycatalog-ai[databricks] (<=0.94)
+databricks-ai-search>=0.78
+databricks-langchain>=0.20
+databricks-mcp>=0.9
+unitycatalog-ai[databricks]>=0.4
+langchain>=1.0
+# langchain-classic: od 23.09 żaden notebook stąd nie importuje (agenci stoją na create_agent
+# z langchain 1.x). Pin zostaje, bo starsze przykłady w sieci nadal go wymagają.
+langchain-classic>=1.0
+langgraph>=1.2
+langchain-text-splitters>=1.1
+openai>=1.0
+nest-asyncio>=1.6  # M6: agent MCP, gdy pętla zdarzeń notebooka już działa
+# mcp 2.x usunął mcp.shared.context.RequestContext, przez co `import databricks_langchain` kończy się ImportError
+# (langchain-mcp-adapters 0.3.1). Zdejmij ograniczenie, gdy adapter wyda wersję zgodną z mcp 2.
+mcp>=1.20,<2

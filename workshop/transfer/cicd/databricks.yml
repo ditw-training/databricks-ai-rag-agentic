@@ -1,0 +1,47 @@
+# Databricks Asset Bundle — szkielet do zabrania do siebie.
+# Nie uruchamiamy go na warsztacie; to punkt startowy na poniedziałek.
+#
+# Sens: agent i jego test jadą tą samą drogą co kod. Macierz tras z M5 staje się
+# bramką — jeśli spadnie poniżej progu, wdrożenie się nie wykonuje.
+bundle:
+  name: retail-agent
+
+variables:
+  catalog:
+    default: workspace
+  schema:
+    default: default
+  min_routes_ok:
+    description: Ile tras musi się zgadzać, żeby wdrożenie przeszło
+    default: 5
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: ${var.workspace_host}
+  prod:
+    mode: production
+    workspace:
+      host: ${var.workspace_host}
+    run_as:
+      # Agent to tożsamość, nie funkcja — w produkcji uruchamiaj go jako service principal
+      # z EXECUTE na funkcjach i bez SELECT na tabelach (patrz M6, least privilege).
+      service_principal_name: ${var.agent_service_principal}
+
+resources:
+  jobs:
+    agent_gate:
+      name: "[${bundle.target}] retail-agent — bramka jakości"
+      tasks:
+        - task_key: route_matrix
+          notebook_task:
+            notebook_path: ../../demo/m5_end_to_end_agent.ipynb
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              min_routes_ok: ${var.min_routes_ok}
+      # Bez powiadomienia bramka jest tylko dekoracją.
+      email_notifications:
+        on_failure: ["${var.owner_email}"]
